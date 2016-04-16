@@ -15,5 +15,8 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/sapirmonza/vamos.git"
+  },
+  "dependencies": {
+    "express": "^4.13.4"
   }
-}
+}//test
