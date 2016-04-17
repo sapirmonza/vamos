@@ -1,0 +1,51 @@
+<html>
+    <head>
+        <script>
+            function fetchFromApi(url, callback) {
+                var xhr = new XMLHttpRequest();
+                xhr.addEventListener("loadend", function() { console.log("res:" + xhr.response); try { var d = JSON.parse(xhr.response).data; } catch(ex) {} callback(d); });
+                xhr.open("GET", url);
+                xhr.setRequestHeader("X-Mashape-Key", "sYf2Sxup6fmshpG9HbAWezLL296bp1AeUVQjsnS3DBYKGQsl1q");
+                xhr.send();
+            }
+            
+            function getLeagues(callback) {
+                fetchFromApi("https://sportsop-soccer-sports-open-data-v1.p.mashape.com/v1/leagues", function(d) { callback(d && d.leagues); });
+            }
+            
+            function getLeagueSeasons(lagueId, callback) {
+                fetchFromApi("https://sportsop-soccer-sports-open-data-v1.p.mashape.com/v1/leagues/" + leagueId + "/seasons", function(d) { callback(d && d.seasons); });
+            }
+            
+            function getStandings(leagueId, seasonId, callback) {
+                fetchFromApi("https://sportsop-soccer-sports-open-data-v1.p.mashape.com/v1/leagues/" + leagueId + "/seasons/" + seasonId, callback);
+            }
+			
+			function buildList() {
+				getLeagues(function(leagues) {
+				   if (!leagues) return console.error("Failed to fetch leagues:" + leagues);
+				   
+				   var s = document.createElement("select");
+				   leagues.forEach(l => {
+					   var o1 = document.createElement("option");
+					   o1.v = l;
+					   o1.textContent = l.name;
+					   s.appendChild(o1);
+				   });
+				   
+				   s.addEventListener("change", function() {
+				       getLeagueSeasons(s.options[s.selectedIndex].v.league_slug, function(seasons) {
+				           
+				       });
+				   });
+				   
+				   document.body.appendChild(s);
+				   
+				});
+			}
+        </script>
+    </head>
+    <body>
+		<button onclick="buildList();">Click</button>
+    </body>
+</html>
